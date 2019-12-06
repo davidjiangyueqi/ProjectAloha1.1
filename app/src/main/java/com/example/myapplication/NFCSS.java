@@ -71,7 +71,7 @@ public class NFCSS extends Activity{
         /**
          * save change button.
          */
-        btnWrite = findViewById(R.id.save);
+        /**btnWrite = findViewById(R.id.save);
         OwnSigniture newTag = new OwnSigniture();
         final String toWrite = newTag.makeTag();
 
@@ -93,9 +93,11 @@ public class NFCSS extends Activity{
                 } catch (FormatException e) {
                     Toast.makeText(context, WRITE_ERROR, Toast.LENGTH_LONG ).show();
                     e.printStackTrace();
+                } catch (Exception e) {
+                    Toast.makeText(context, "no root", Toast.LENGTH_LONG ).show();
                 }
             }
-        });
+        });*/
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
@@ -110,6 +112,7 @@ public class NFCSS extends Activity{
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writeTagFilters = new IntentFilter[] { tagDetected };
         showTag(getNFCContent());
+        //Toast.makeText(context, myTag.getId().toString(), Toast.LENGTH_LONG ).show();
     }
 
 
@@ -121,6 +124,7 @@ public class NFCSS extends Activity{
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)
                 || NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)
                 || NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            Toast.makeText(context, "Found tag", Toast.LENGTH_LONG ).show();
             Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
             NdefMessage[] msgs = null;
             if (rawMsgs != null) {
@@ -130,6 +134,8 @@ public class NFCSS extends Activity{
                 }
             }
             buildTagViews(msgs);
+        } else {
+            Toast.makeText(context, "No tag found", Toast.LENGTH_LONG ).show();
         }
     }
     private void buildTagViews(NdefMessage[] msgs) {
@@ -170,7 +176,12 @@ public class NFCSS extends Activity{
         // Enable I/O
         ndef.connect();
         // Write the message
-        ndef.writeNdefMessage(message);
+        try {
+            ndef.writeNdefMessage(message);
+        } catch (Exception e) {
+
+        }
+        //ndef.writeNdefMessage(message);
         // Close the connection
         ndef.close();
     }

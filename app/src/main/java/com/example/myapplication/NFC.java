@@ -165,12 +165,16 @@ public class NFC extends Activity{
         NdefMessage message = new NdefMessage(records);
         // Get an instance of Ndef for the tag.
         Ndef ndef = Ndef.get(tag);
-        // Enable I/O
-        ndef.connect();
-        // Write the message
-        ndef.writeNdefMessage(message);
-        // Close the connection
-        ndef.close();
+        if (ndef != null) {
+            // Enable I/O
+            ndef.connect();
+            // Write the message
+            ndef.writeNdefMessage(message);
+            // Close the connection
+            ndef.close();
+        } else {
+            Toast.makeText(context, "no tag got", Toast.LENGTH_LONG ).show();
+        }
     }
     private NdefRecord createRecord(String text) throws UnsupportedEncodingException {
         String lang       = "en";
